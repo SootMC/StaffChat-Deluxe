@@ -72,8 +72,17 @@ public class Manager {
         DiscordBot.getDiscordBot().sendChannelMessage(message, channel, serverName, senderName);
     }
 
-    public void sendMoveMessage(String player, String preServer, String postServer) {
+    public void sendMoveMessage(String player, String preServer, String postServer, Channel channel) {
+        String formatted = String.format(ChatColor.translateAlternateColorCodes('&', channel.displayName() + " &r| " + channel.chatColor() + "%s switched from %s to %s"), player, preServer, postServer);
+        plugin.getProxy().getPlayers().forEach(player1 -> {
+            if(playerMutedChannels.get(player1.getUniqueId()) == null || !playerMutedChannels.get(player1.getUniqueId()).contains(channel)) {
+                player1.sendMessage(new TextComponent(formatted));
+            }
+        });
 
+        plugin.getLogger().info(formatted);
+
+        DiscordBot.getDiscordBot().sendChannelMessage(String.format("**%s** moved from **%s** to **%s**", player, preServer, postServer), channel, "", "");
     }
 
     public void sendJoinLeaveMessage(String player, Channel channel, boolean isJoin) {

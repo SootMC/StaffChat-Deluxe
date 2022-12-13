@@ -2,6 +2,7 @@ package dev.jamieisgeek.superultrastaffchat;
 
 import dev.jamieisgeek.superultrastaffchat.Events.ChatEvent;
 import dev.jamieisgeek.superultrastaffchat.Events.JoinEvent;
+import dev.jamieisgeek.superultrastaffchat.Events.ServerSwitchEvent;
 import dev.jamieisgeek.superultrastaffchat.Models.Channel;
 import dev.jamieisgeek.superultrastaffchat.Models.DiscordBot;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -36,6 +37,7 @@ public final class SuperUltraStaffChat extends Plugin {
 
         getProxy().getPluginManager().registerListener(this, new ChatEvent());
         getProxy().getPluginManager().registerListener(this, new JoinEvent());
+        getProxy().getPluginManager().registerListener(this, new ServerSwitchEvent());
         getLogger().info("SuperUltraStaffChat has enabled");
     }
 
