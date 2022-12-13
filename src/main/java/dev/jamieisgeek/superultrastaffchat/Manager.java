@@ -51,7 +51,9 @@ public class Manager {
     public void sendMessageToChannel(Channel channel, String message, String senderName, String serverName) {
         String formatted = String.format(ChatColor.translateAlternateColorCodes('&', channel.chatColor() + "[" + channel.displayName() + channel.chatColor() + "] [%s] | %s -> %s"), serverName, senderName, message);
         plugin.getProxy().getPlayers().forEach(player -> {
-            player.sendMessage(new TextComponent(formatted));
+            if(playerMutedChannels.get(player.getUniqueId()) == null || playerMutedChannels.get(player.getUniqueId())[0] == null || !playerMutedChannels.get(player.getUniqueId())[0].name().equals(channel.name())) {
+                player.sendMessage(new TextComponent(formatted));
+            }
         });
 
         plugin.getLogger().info(formatted);

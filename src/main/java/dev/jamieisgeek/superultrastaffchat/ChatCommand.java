@@ -23,10 +23,12 @@ public class ChatCommand extends Command {
                 case "mute" -> {
                     manager.addPlayerMutedChannel(player.getUniqueId(), channel);
                     player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', channel.displayName() + ChatColor.RESET + " | "+ ChatColor.RED + "Channel Muted")));
+                    return;
                 }
                 case "unmute" -> {
                     manager.removePlayerMutedChannel(player.getUniqueId(), channel);
                     player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', channel.displayName() + ChatColor.RESET + " | " + ChatColor.GREEN + "Channel Unmuted")));
+                    return;
                 }
             }
         }
