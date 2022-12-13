@@ -27,7 +27,7 @@ public final class SuperUltraStaffChat extends Plugin {
         manager = new Manager(this);
         this.setupChannels();
         try {
-            new DiscordBot(configuration.getString("token"), configuration, manager.getChannels());
+            new DiscordBot(configuration.getString("botToken"), configuration, manager.getChannels());
         } catch (LoginException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -38,7 +38,9 @@ public final class SuperUltraStaffChat extends Plugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        DiscordBot.getBOT().shutdown();
+        getLogger().info("Discord bot shutdown");
+        getLogger().info("SuperUltraStaffChat has disabled");
     }
 
     private void setupConfig() throws IOException {

@@ -21,8 +21,8 @@ import java.util.Objects;
 
 public class DiscordBot implements EventListener {
     private final String token;
-    private HashMap<Channel, String> discordChannels;
-    private JDA BOT;
+    private HashMap<Channel, String> discordChannels = new HashMap<>();
+    private static JDA BOT;
     private final Manager manager;
 
     public DiscordBot(String token, Configuration config, ArrayList<Channel> channels) throws LoginException, InterruptedException {
@@ -74,5 +74,9 @@ public class DiscordBot implements EventListener {
         } else if (genericEvent instanceof ReadyEvent event) {
             manager.getPlugin().getLogger().info("Discord bot logged in as: " + event.getJDA().getSelfUser().getAsTag());
         }
+    }
+
+    public static JDA getBOT() {
+        return BOT;
     }
 }
