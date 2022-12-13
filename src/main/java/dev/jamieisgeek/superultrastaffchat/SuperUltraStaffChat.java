@@ -1,5 +1,7 @@
 package dev.jamieisgeek.superultrastaffchat;
 
+import dev.jamieisgeek.superultrastaffchat.Events.ChatEvent;
+import dev.jamieisgeek.superultrastaffchat.Events.JoinEvent;
 import dev.jamieisgeek.superultrastaffchat.Models.Channel;
 import dev.jamieisgeek.superultrastaffchat.Models.DiscordBot;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -32,7 +34,8 @@ public final class SuperUltraStaffChat extends Plugin {
             throw new RuntimeException(e);
         }
 
-
+        getProxy().getPluginManager().registerListener(this, new ChatEvent());
+        getProxy().getPluginManager().registerListener(this, new JoinEvent());
         getLogger().info("SuperUltraStaffChat has enabled");
     }
 
@@ -76,7 +79,8 @@ public final class SuperUltraStaffChat extends Plugin {
             String[] aliases = channel.getStringList("aliases").toArray(new String[0]);
             String discordChannelID = channel.getString("discordChannel");
             String format = channel.getString("format");
-            manager.addChannel(new Channel(channelName, displayName, permission, chatColor, chatPrefix, command, aliases, discordChannelID, format));
+            boolean moveMessages = channel.getBoolean("moveMessages");
+            manager.addChannel(new Channel(channelName, displayName, permission, chatColor, chatPrefix, command, aliases, discordChannelID, format, moveMessages));
 
             getLogger().info("Registered channel: " + channelName);
         }

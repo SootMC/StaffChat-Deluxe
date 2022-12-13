@@ -72,6 +72,28 @@ public class Manager {
         DiscordBot.getDiscordBot().sendChannelMessage(message, channel, serverName, senderName);
     }
 
+    public void sendMoveMessage(String player, String preServer, String postServer) {
+
+    }
+
+    public void sendJoinLeaveMessage(String player, Channel channel, boolean isJoin) {
+        if(isJoin) {
+            plugin.getProxy().getPlayers().forEach(player1 -> {
+                player1.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', channel.displayName() + "&r | " + channel.chatColor() + "[+] " + player)));
+            });
+
+            DiscordBot.getDiscordBot().sendJoinLeaveMessage(player, channel, true);
+            plugin.getLogger().info(ChatColor.translateAlternateColorCodes('&', channel.displayName() + "&r | " + channel.chatColor() + "[+] " + player));
+        } else {
+            plugin.getProxy().getPlayers().forEach(player1 -> {
+                player1.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', channel.displayName() + "&r | " + channel.chatColor() + "[-] " + player)));
+            });
+
+            DiscordBot.getDiscordBot().sendJoinLeaveMessage(player, channel, false);
+            plugin.getLogger().info(ChatColor.translateAlternateColorCodes('&', channel.displayName() + "&r | " + channel.chatColor() + "[-] " + player));
+        }
+    }
+
     public void addPlayerToggledChannel(UUID uuid, Channel channel) {
         playerToggledChannel.put(uuid, channel);
     }

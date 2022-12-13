@@ -82,6 +82,16 @@ public class DiscordBot implements EventListener {
         }
     }
 
+    public void sendJoinLeaveMessage(String player, Channel channel, boolean isJoin) {
+        if(discordChannels.containsKey(channel)) {
+            if(isJoin) {
+                BOT.getTextChannelById(discordChannels.get(channel)).sendMessage("[+] **" + player + "**").queue();
+            } else {
+                BOT.getTextChannelById(discordChannels.get(channel)).sendMessage("[-] **" + player + "**").queue();
+            }
+        }
+    }
+
     public void sendChannelMessage(String message, Channel channel, String serverName, String sender) {
         BOT.getTextChannelById(discordChannels.get(channel)).sendMessage("**" + serverName + "** | " + sender + ": " + message).queue();
     }
