@@ -19,14 +19,14 @@ public class ChatCommand extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if(sender instanceof ProxiedPlayer player && args.length == 1) {
-            switch (args[1]) {
+            switch (args[0]) {
                 case "mute" -> {
                     manager.addPlayerMutedChannel(player.getUniqueId(), channel);
-                    player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', channel.displayName() + ChatColor.RESET + ChatColor.RED + "Muted channel " + ChatColor.RESET + channel.name())));
+                    player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', channel.displayName() + ChatColor.RESET + " | "+ ChatColor.RED + "Channel Muted")));
                 }
                 case "unmute" -> {
                     manager.removePlayerMutedChannel(player.getUniqueId(), channel);
-                    player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', channel.displayName() + ChatColor.RESET + ChatColor.GREEN + "Unmuted channel " + ChatColor.RESET + channel.name())));
+                    player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', channel.displayName() + ChatColor.RESET + " | " + ChatColor.GREEN + "Channel Unmuted")));
                 }
             }
         }
@@ -34,10 +34,10 @@ public class ChatCommand extends Command {
         if(sender instanceof ProxiedPlayer player && args.length == 0) {
             if(manager.getPlayerToggledChannel().containsKey(player.getUniqueId()) && manager.getPlayerToggledChannel().get(player.getUniqueId()).name().equals(channel.name())) {
                 manager.removePlayerToggledChannel(player.getUniqueId());
-                player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', channel.displayName() + ChatColor.RESET + ChatColor.GREEN + "Toggled channel " + ChatColor.RESET + channel.name())));
+                player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', channel.displayName() + ChatColor.RESET + " | " + ChatColor.GREEN + "Toggled channel OFF")));
             } else {
                 manager.addPlayerToggledChannel(player.getUniqueId(), channel);
-                player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', channel.displayName() + ChatColor.RESET + ChatColor.GREEN + "Toggled channel " + ChatColor.RESET + channel.name())));
+                player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', channel.displayName() + ChatColor.RESET + " | " + ChatColor.GREEN + "Toggled channel ON")));
             }
         }
     }

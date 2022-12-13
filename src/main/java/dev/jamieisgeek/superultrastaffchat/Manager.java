@@ -52,6 +52,8 @@ public class Manager {
         plugin.getProxy().getPlayers().forEach(player -> {
             player.sendMessage(new TextComponent(formatted));
         });
+
+        plugin.getLogger().info(formatted);
     }
 
     public void addPlayerToggledChannel(UUID uuid, Channel channel) {
