@@ -1,6 +1,7 @@
 botToken: token
 channels:
   staff:
+    displayName: "&4&lStaff"
     permission: "staffchat.staff"
     chatColor: "&c"
     chatPrefix: "#"
