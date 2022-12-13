@@ -82,7 +82,7 @@ public class Manager {
 
         plugin.getLogger().info(formatted);
 
-        DiscordBot.getDiscordBot().sendChannelMessage(String.format("**%s** moved from **%s** to **%s**", player, preServer, postServer), channel, "", "");
+        DiscordBot.getDiscordBot().sendSwitchMessage(String.format("**%s** moved from **%s** to **%s**", player, preServer, postServer), channel);
     }
 
     public void sendJoinLeaveMessage(String player, Channel channel, boolean isJoin) {

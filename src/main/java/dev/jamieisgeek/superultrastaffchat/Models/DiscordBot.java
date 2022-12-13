@@ -92,6 +92,11 @@ public class DiscordBot implements EventListener {
         }
     }
 
+    public void sendSwitchMessage(String message, Channel channel) {
+        if(discordChannels.containsKey(channel)) {
+            BOT.getTextChannelById(discordChannels.get(channel)).sendMessage(message).queue();
+        }
+    }
     public void sendChannelMessage(String message, Channel channel, String serverName, String sender) {
         BOT.getTextChannelById(discordChannels.get(channel)).sendMessage("**" + serverName + "** | " + sender + ": " + message).queue();
     }
