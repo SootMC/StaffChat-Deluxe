@@ -73,7 +73,7 @@ public class DiscordBot implements EventListener {
             }
 
             if(channel != null) {
-                manager.sendMessageToChannel(channel, event.getMessage().getContentRaw(), event.getAuthor().getAsTag(), "Discord");
+                manager.sendMessageToChannel(channel, event.getMessage().getContentRaw(), event.getAuthor().getAsTag(), "Discord", true);
             } else {
                 manager.getPlugin().getLogger().severe("Error when getting channel from DiscordBot.class");
             }

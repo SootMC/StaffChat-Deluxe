@@ -13,7 +13,7 @@ public class Manager {
     private static Manager manager = null;
     private final SuperUltraStaffChat plugin;
     private final ArrayList<Channel> channels = new ArrayList<>();
-    private HashMap<UUID, Channel[]> playerMutedChannels = new HashMap<>();
+    private HashMap<UUID, ArrayList<Channel>> playerMutedChannels = new HashMap<>();
     private HashMap<UUID, Channel> playerToggledChannel = new HashMap<>();
 
     public Manager(SuperUltraStaffChat plugin) {
@@ -34,29 +34,39 @@ public class Manager {
     }
 
     public void addPlayerMutedChannel(UUID uuid, Channel channel) {
-        playerMutedChannels.put(uuid, new Channel[]{channel});
+        if(playerMutedChannels.containsKey(uuid)) {
+            playerMutedChannels.get(uuid).add(channel);
+        } else {
+            ArrayList<Channel> channels = new ArrayList<>();
+            channels.add(channel);
+            playerMutedChannels.put(uuid, channels);
+        }
     }
 
     public void removePlayerMutedChannel(UUID uuid, Channel channel) {
-        Channel[] channels = playerMutedChannels.get(uuid);
+        ArrayList<Channel> channels = playerMutedChannels.get(uuid);
         if (channels != null) {
-            for (int i = 0; i < channels.length; i++) {
-                if (channels[i].name().equals(channel.name())) {
-                    channels[i] = null;
+            for (int i = 0; i < channels.size(); i++) {
+                if (channels.get(i).name().equals(channel.name())) {
+                    channels.set(i, null);
                 }
             }
         }
     }
 
-    public void sendMessageToChannel(Channel channel, String message, String senderName, String serverName) {
-        String formatted = String.format(ChatColor.translateAlternateColorCodes('&', channel.chatColor() + "[" + channel.displayName() + channel.chatColor() + "] [%s] | %s -> %s"), serverName, senderName, message);
+    public void sendMessageToChannel(Channel channel, String message, String senderName, String serverName, boolean isDiscord) {
+        String preColor = channel.format().replace("{server}", serverName).replace("{player}", senderName).replace("{message}", message);
+        String formatted = ChatColor.translateAlternateColorCodes('&', preColor);
         plugin.getProxy().getPlayers().forEach(player -> {
-            if(playerMutedChannels.get(player.getUniqueId()) == null || playerMutedChannels.get(player.getUniqueId())[0] == null || !playerMutedChannels.get(player.getUniqueId())[0].name().equals(channel.name())) {
+            if(playerMutedChannels.get(player.getUniqueId()) == null || !playerMutedChannels.get(player.getUniqueId()).contains(channel)) {
                 player.sendMessage(new TextComponent(formatted));
             }
         });
 
         plugin.getLogger().info(formatted);
+
+        if(isDiscord) return;
+
         DiscordBot.getDiscordBot().sendChannelMessage(message, channel, serverName, senderName);
     }
 

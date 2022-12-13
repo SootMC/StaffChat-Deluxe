@@ -45,7 +45,7 @@ public class ChatCommand extends Command {
         }
 
         if(sender instanceof ProxiedPlayer player) {
-            manager.sendMessageToChannel(channel, String.join(" ", args), player.getName(), player.getServer().getInfo().getName());
+            manager.sendMessageToChannel(channel, String.join(" ", args), player.getName(), player.getServer().getInfo().getName(), false);
         }
     }
 }

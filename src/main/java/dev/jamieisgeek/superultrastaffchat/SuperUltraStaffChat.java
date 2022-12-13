@@ -75,7 +75,8 @@ public final class SuperUltraStaffChat extends Plugin {
             String command = channel.getString("command");
             String[] aliases = channel.getStringList("aliases").toArray(new String[0]);
             String discordChannelID = channel.getString("discordChannel");
-            manager.addChannel(new Channel(channelName, displayName, permission, chatColor, chatPrefix, command, aliases, discordChannelID));
+            String format = channel.getString("format");
+            manager.addChannel(new Channel(channelName, displayName, permission, chatColor, chatPrefix, command, aliases, discordChannelID, format));
 
             getLogger().info("Registered channel: " + channelName);
         }
