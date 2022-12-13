@@ -1,10 +1,13 @@
 package dev.jamieisgeek.superultrastaffchat;
 
+import dev.jamieisgeek.superultrastaffchat.Models.Channel;
+import dev.jamieisgeek.superultrastaffchat.Models.DiscordBot;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
+import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -23,6 +26,14 @@ public final class SuperUltraStaffChat extends Plugin {
         }
         manager = new Manager(this);
         this.setupChannels();
+        try {
+            new DiscordBot(configuration.getString("token"), configuration, manager.getChannels());
+        } catch (LoginException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        getLogger().info("SuperUltraStaffChat has enabled");
     }
 
     @Override
@@ -61,7 +72,10 @@ public final class SuperUltraStaffChat extends Plugin {
             String chatPrefix = channel.getString("chatPrefix");
             String command = channel.getString("command");
             String[] aliases = channel.getStringList("aliases").toArray(new String[0]);
-            manager.addChannel(new Channel(channelName, displayName, permission, chatColor, chatPrefix, command, aliases));
+            String discordChannelID = channel.getString("discordChannel");
+            manager.addChannel(new Channel(channelName, displayName, permission, chatColor, chatPrefix, command, aliases, discordChannelID));
+
+            getLogger().info("Registered channel: " + channelName);
         }
 
         for(Channel channel : manager.getChannels()) {

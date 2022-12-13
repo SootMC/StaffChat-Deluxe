@@ -1,5 +1,8 @@
 package dev.jamieisgeek.superultrastaffchat;
 
+import dev.jamieisgeek.superultrastaffchat.Models.Channel;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -43,6 +46,13 @@ public class Manager {
         }
     }
 
+    public void sendMessageToChannel(Channel channel, String message, String senderName, String serverName) {
+        String formatted = String.format(channel.chatColor() + "[" + channel.displayName() + channel.chatColor() + "]" + "%s %s -> %s", serverName, senderName, message);
+        plugin.getProxy().getPlayers().forEach(player -> {
+            player.sendMessage(new TextComponent(formatted));
+        });
+    }
+
     public void addPlayerToggledChannel(UUID uuid, Channel channel) {
         playerToggledChannel.put(uuid, channel);
     }
@@ -53,5 +63,8 @@ public class Manager {
 
     public HashMap<UUID, Channel> getPlayerToggledChannel() {
         return playerToggledChannel;
+    }
+    public SuperUltraStaffChat getPlugin() {
+        return plugin;
     }
 }

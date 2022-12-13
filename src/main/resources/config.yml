@@ -1,3 +1,4 @@
+botToken: token
 channels:
   staff:
     displayName: "&4&lStaff"
@@ -7,3 +8,4 @@ channels:
     command: "sc"
     commandAliases: ["staffchat", "staffc"]
     moveMessages: true
+    discordChannel: 328923486723845
