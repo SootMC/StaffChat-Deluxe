@@ -1,6 +1,7 @@
 package dev.jamieisgeek.superultrastaffchat;
 
 import dev.jamieisgeek.superultrastaffchat.Models.Channel;
+import dev.jamieisgeek.superultrastaffchat.Models.DiscordBot;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -54,6 +55,7 @@ public class Manager {
         });
 
         plugin.getLogger().info(formatted);
+        DiscordBot.getDiscordBot().sendChannelMessage(message, channel, serverName, senderName);
     }
 
     public void addPlayerToggledChannel(UUID uuid, Channel channel) {

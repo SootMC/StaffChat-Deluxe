@@ -23,11 +23,13 @@ public class DiscordBot implements EventListener {
     private final String token;
     private HashMap<Channel, String> discordChannels = new HashMap<>();
     private static JDA BOT;
+    private static DiscordBot discordBot;
     private final Manager manager;
 
     public DiscordBot(String token, Configuration config, ArrayList<Channel> channels) throws LoginException, InterruptedException {
         this.token = token;
         this.manager = Manager.getManager();
+        discordBot = this;
         for(Channel channel : channels) {
             discordChannels.put(channel, channel.discordChannelID());
         }
@@ -58,6 +60,10 @@ public class DiscordBot implements EventListener {
                 return;
             }
 
+            if(event.getAuthor().isBot()) {
+                return;
+            }
+
             Channel channel = null;
 
             for(Map.Entry<Channel, String> entry : discordChannels.entrySet()) {
@@ -74,6 +80,14 @@ public class DiscordBot implements EventListener {
         } else if (genericEvent instanceof ReadyEvent event) {
             manager.getPlugin().getLogger().info("Discord bot logged in as: " + event.getJDA().getSelfUser().getAsTag());
         }
+    }
+
+    public void sendChannelMessage(String message, Channel channel, String serverName, String sender) {
+        BOT.getTextChannelById(discordChannels.get(channel)).sendMessage("**" + serverName + "** | " + sender + ": " + message).queue();
+    }
+
+    public static DiscordBot getDiscordBot() {
+        return discordBot;
     }
 
     public static JDA getBOT() {
