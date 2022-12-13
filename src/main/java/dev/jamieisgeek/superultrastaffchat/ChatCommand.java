@@ -39,6 +39,11 @@ public class ChatCommand extends Command {
                 manager.addPlayerToggledChannel(player.getUniqueId(), channel);
                 player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', channel.displayName() + ChatColor.RESET + " | " + ChatColor.GREEN + "Toggled channel ON")));
             }
+            return;
+        }
+
+        if(sender instanceof ProxiedPlayer player) {
+            manager.sendMessageToChannel(channel, String.join(" ", args), player.getName(), player.getServer().getInfo().getName());
         }
     }
 }
