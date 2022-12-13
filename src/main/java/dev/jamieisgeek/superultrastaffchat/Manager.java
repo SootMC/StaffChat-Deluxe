@@ -35,7 +35,9 @@ public class Manager {
 
     public void addPlayerMutedChannel(UUID uuid, Channel channel) {
         if(playerMutedChannels.containsKey(uuid)) {
-            playerMutedChannels.get(uuid).add(channel);
+            if(!playerMutedChannels.get(uuid).contains(channel)) {
+                playerMutedChannels.get(uuid).add(channel);
+            }
         } else {
             ArrayList<Channel> channels = new ArrayList<>();
             channels.add(channel);
