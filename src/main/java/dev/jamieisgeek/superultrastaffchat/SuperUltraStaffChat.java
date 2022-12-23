@@ -43,7 +43,7 @@ public final class SuperUltraStaffChat extends Plugin {
 
     @Override
     public void onDisable() {
-        DiscordBot.getBOT().shutdown();
+        DiscordBot.getBOT().shutdownNow();
         getLogger().info("Discord bot shutdown");
         getLogger().info("SuperUltraStaffChat has disabled");
     }
