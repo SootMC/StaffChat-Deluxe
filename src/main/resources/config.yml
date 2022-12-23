@@ -1,3 +1,9 @@
+# Placeholders:
+# {server} - Current server name
+# {player} - Player name
+# {message} - Message sent
+# {displayName} - Channel display name (defined by the displayName config option)
+
 botToken: "token"
 channels:
   staff:
@@ -9,4 +15,4 @@ channels:
     commandAliases: ["staffchat", "staffc"]
     moveMessages: true
     discordChannel: "328923486723845"
-    format: "&c[&4&lStaff&c] &f| &c{server} &f| &c{player} &7» &c{message}"
+    format: "&c[{displayName}&c] &f| &c{server} &f| &c{player} &7» &c{message}"

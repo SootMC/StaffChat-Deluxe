@@ -57,7 +57,7 @@ public class Manager {
     }
 
     public void sendMessageToChannel(Channel channel, String message, String senderName, String serverName, boolean isDiscord) {
-        String preColor = channel.format().replace("{server}", serverName).replace("{player}", senderName).replace("{message}", message);
+        String preColor = channel.format().replace("{server}", serverName).replace("{player}", senderName).replace("{message}", message).replace("{displayName}", channel.displayName());
         String formatted = ChatColor.translateAlternateColorCodes('&', preColor);
         plugin.getProxy().getPlayers().forEach(player -> {
             if(playerMutedChannels.get(player.getUniqueId()) == null || !playerMutedChannels.get(player.getUniqueId()).contains(channel)) {
