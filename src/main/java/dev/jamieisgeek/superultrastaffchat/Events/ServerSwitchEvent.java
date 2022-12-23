@@ -8,6 +8,8 @@ public class ServerSwitchEvent implements Listener {
 
     @EventHandler
     public void onServerSwitch(net.md_5.bungee.api.event.ServerSwitchEvent event) {
+        if(event.getFrom() == null) return;
+
         String preServer = event.getFrom().getName();
 
         if(preServer == null) return;
