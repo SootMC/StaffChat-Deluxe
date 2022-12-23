@@ -31,7 +31,7 @@ public class ChatEvent implements Listener {
         manager.getChannels().forEach(channel -> {
             if (message.startsWith(channel.chatPrefix())) {
                 if(player.hasPermission(channel.permission())) {
-                    String msg = message.replace("#" + channel.name(), "");
+                    String msg = message.replace(channel.chatPrefix(), "");
                     manager.sendMessageToChannel(channel, msg, senderName, serverName, isDiscord);
                     event.setCancelled(true);
                 }

@@ -61,6 +61,8 @@ public class Manager {
         String formatted = ChatColor.translateAlternateColorCodes('&', preColor);
         plugin.getProxy().getPlayers().forEach(player -> {
             if(playerMutedChannels.get(player.getUniqueId()) == null || !playerMutedChannels.get(player.getUniqueId()).contains(channel)) {
+                if(!player.hasPermission(channel.permission())) return;
+
                 player.sendMessage(new TextComponent(formatted));
             }
         });
@@ -76,6 +78,7 @@ public class Manager {
         String formatted = String.format(ChatColor.translateAlternateColorCodes('&', channel.displayName() + " &r| " + channel.chatColor() + "%s switched from %s to %s"), player, preServer, postServer);
         plugin.getProxy().getPlayers().forEach(player1 -> {
             if(playerMutedChannels.get(player1.getUniqueId()) == null || !playerMutedChannels.get(player1.getUniqueId()).contains(channel)) {
+                if(!player1.hasPermission(channel.permission())) return;
                 player1.sendMessage(new TextComponent(formatted));
             }
         });
@@ -88,7 +91,10 @@ public class Manager {
     public void sendJoinLeaveMessage(String player, Channel channel, boolean isJoin) {
         if(isJoin) {
             plugin.getProxy().getPlayers().forEach(player1 -> {
-                player1.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', channel.displayName() + "&r | " + channel.chatColor() + "[+] " + player)));
+                if(playerMutedChannels.get(player1.getUniqueId()) == null || !playerMutedChannels.get(player1.getUniqueId()).contains(channel)) {
+                    if (!player1.hasPermission(channel.permission())) return;
+                    player1.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', channel.displayName() + " &r| " + channel.chatColor() + player + " joined the network")));
+                }
             });
 
             DiscordBot.getDiscordBot().sendJoinLeaveMessage(player, channel, true);
