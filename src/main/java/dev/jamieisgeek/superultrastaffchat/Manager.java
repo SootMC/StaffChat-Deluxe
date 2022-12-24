@@ -79,6 +79,7 @@ public class Manager {
         plugin.getProxy().getPlayers().forEach(player1 -> {
             if(playerMutedChannels.get(player1.getUniqueId()) == null || !playerMutedChannels.get(player1.getUniqueId()).contains(channel)) {
                 if(!player1.hasPermission(channel.permission())) return;
+
                 player1.sendMessage(new TextComponent(formatted));
             }
         });
@@ -93,6 +94,7 @@ public class Manager {
             plugin.getProxy().getPlayers().forEach(player1 -> {
                 if(playerMutedChannels.get(player1.getUniqueId()) == null || !playerMutedChannels.get(player1.getUniqueId()).contains(channel)) {
                     if (!player1.hasPermission(channel.permission())) return;
+
                     player1.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', channel.displayName() + " &r| " + channel.chatColor() + player + " joined the network")));
                 }
             });
@@ -101,6 +103,7 @@ public class Manager {
             plugin.getLogger().info(ChatColor.translateAlternateColorCodes('&', channel.displayName() + "&r | " + channel.chatColor() + "[+] " + player));
         } else {
             plugin.getProxy().getPlayers().forEach(player1 -> {
+                if (!player1.hasPermission(channel.permission())) return;
                 player1.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', channel.displayName() + "&r | " + channel.chatColor() + "[-] " + player)));
             });
 

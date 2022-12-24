@@ -1,6 +1,7 @@
 package dev.jamieisgeek.superultrastaffchat.Events;
 
 import dev.jamieisgeek.superultrastaffchat.Manager;
+import dev.jamieisgeek.superultrastaffchat.Models.Channel;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
@@ -31,6 +32,10 @@ public class JoinEvent implements Listener {
             if(player.hasPermission(channel.permission()) && channel.moveMessages()) {
                 manager.sendJoinLeaveMessage(player.getName(), channel, false);
             }
+
+            manager.removePlayerMutedChannel(player.getUniqueId(), channel);
         });
+
+        manager.getPlayerToggledChannel().remove(player.getUniqueId());
     }
 }
