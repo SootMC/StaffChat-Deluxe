@@ -1,8 +1,10 @@
 package dev.jamieisgeek.superultrastaffchat;
 
 import dev.jamieisgeek.superultrastaffchat.Models.Channel;
+import dev.jamieisgeek.superultrastaffchat.Models.Database;
 import dev.jamieisgeek.superultrastaffchat.Models.DiscordBot;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.ArrayList;
@@ -109,6 +111,44 @@ public class Manager {
 
             DiscordBot.getDiscordBot().sendJoinLeaveMessage(player, channel, false);
             plugin.getLogger().info(ChatColor.translateAlternateColorCodes('&', channel.displayName() + "&r | " + channel.chatColor() + "[-] " + player));
+        }
+    }
+
+    public void sendStaffList(CommandSender sender, boolean vanishedPlayers) {
+        ArrayList<String> staff = new ArrayList<>();
+        if(vanishedPlayers) {
+            plugin.getProxy().getPlayers().forEach(player -> {
+                if(!player.hasPermission("superultrastaffchat.staff")) {
+                    return;
+                }
+
+                if(Database.getDatabase().getPlayerVanished(player.getUniqueId().toString())) {
+                    staff.add(ChatColor.AQUA + "[" + player.getServer().getInfo().getName() + "] " + player.getName() + " (Vanished)");
+                } else {
+                    staff.add(ChatColor.AQUA + "[" + player.getServer().getInfo().getName() + "] " + player.getName());
+                }
+            });
+        } else {
+            plugin.getProxy().getPlayers().forEach(player -> {
+                if(!player.hasPermission("superultrastaffchat.staff")) {
+                    return;
+                }
+
+                if(Database.getDatabase().getPlayerVanished(player.getUniqueId().toString())) {
+                    return;
+                }
+
+                staff.add(ChatColor.AQUA + "[" + player.getServer().getInfo().getName() + "] " + player.getName());
+            });
+        }
+
+        sender.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', "&8&m--------------&r &6Online Staff &8&m--------------")));
+        if(staff.size() == 0) {
+            sender.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', "&cThere are no staff online!")));
+        } else {
+            for(String staffMember : staff) {
+                sender.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', staffMember)));
+            }
         }
     }
 
