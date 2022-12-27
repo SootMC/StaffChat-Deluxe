@@ -5,6 +5,13 @@
 # {displayName} - Channel display name (defined by the displayName config option)
 
 botToken: "token"
+
+# Premium Vanish Database Hook
+sql:
+  database: "database"
+  host: "127.0.0.0"
+  username: "root"
+  password: "password"
 channels:
   staff:
     displayName: "&4&lStaff"

@@ -4,6 +4,7 @@ import dev.jamieisgeek.superultrastaffchat.Events.ChatEvent;
 import dev.jamieisgeek.superultrastaffchat.Events.JoinEvent;
 import dev.jamieisgeek.superultrastaffchat.Events.ServerSwitchEvent;
 import dev.jamieisgeek.superultrastaffchat.Models.Channel;
+import dev.jamieisgeek.superultrastaffchat.Models.Database;
 import dev.jamieisgeek.superultrastaffchat.Models.DiscordBot;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
 
 public final class SuperUltraStaffChat extends Plugin {
     private Configuration configuration;
@@ -35,9 +37,16 @@ public final class SuperUltraStaffChat extends Plugin {
             throw new RuntimeException(e);
         }
 
+        try {
+            this.setupDatabaseConnection();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
         getProxy().getPluginManager().registerListener(this, new ChatEvent());
         getProxy().getPluginManager().registerListener(this, new JoinEvent());
         getProxy().getPluginManager().registerListener(this, new ServerSwitchEvent());
+        getProxy().getPluginManager().registerCommand(this, new StaffListCommand());
         getLogger().info("SuperUltraStaffChat has enabled");
     }
 
@@ -45,6 +54,10 @@ public final class SuperUltraStaffChat extends Plugin {
     public void onDisable() {
         DiscordBot.getBOT().shutdownNow();
         getLogger().info("Discord bot shutdown");
+        try {
+            Database.getDatabase().closeConnection();
+        } catch (SQLException ignored) {
+        }
         getLogger().info("SuperUltraStaffChat has disabled");
     }
 
@@ -90,5 +103,18 @@ public final class SuperUltraStaffChat extends Plugin {
         for(Channel channel : manager.getChannels()) {
             getProxy().getPluginManager().registerCommand(this, new ChatCommand(channel.command(), channel, manager));
         }
+    }
+
+    private void setupDatabaseConnection() throws SQLException, ClassNotFoundException {
+
+        Class.forName("org.mariadb.jdbc.Driver");
+        Configuration databaseConfig = configuration.getSection("sql");
+        String host = databaseConfig.getString("host");
+        String username = databaseConfig.getString("username");
+        String password = databaseConfig.getString("password");
+        String database = databaseConfig.getString("database");
+        String port = databaseConfig.getString("port");
+
+        new Database(host, database, username, password, port);
     }
 }
