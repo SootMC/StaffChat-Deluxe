@@ -5,6 +5,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 
+import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -23,7 +24,7 @@ public class ReloadCommand extends Command {
         if (args[0].equals("reload")) {
             try {
                 Manager.getManager().reload();
-            } catch (IOException | SQLException e) {
+            } catch (IOException | SQLException | LoginException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
 

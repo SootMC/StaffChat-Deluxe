@@ -119,7 +119,7 @@ public final class SuperUltraStaffChat extends Plugin {
         }
     }
 
-    public void reload() throws SQLException {
+    public void reload() throws SQLException, LoginException, InterruptedException {
         try {
             this.setupConfig();
         } catch (IOException e) {
@@ -131,6 +131,8 @@ public final class SuperUltraStaffChat extends Plugin {
         Manager.getManager().getChannels().clear();
         this.setupChannels();
 
+        DiscordBot.getBOT().shutdownNow();
+        new DiscordBot(configuration.getString("botToken"), configuration, manager.getChannels());
         Database.getDatabase().closeConnection();
 
         try {
