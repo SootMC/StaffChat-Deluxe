@@ -20,6 +20,7 @@ import java.sql.SQLException;
 
 public final class SuperUltraStaffChat extends Plugin {
     private Configuration configuration;
+    private Configuration messages;
     private Manager manager;
 
     @Override
@@ -29,8 +30,10 @@ public final class SuperUltraStaffChat extends Plugin {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        manager = new Manager(this);
+
+        manager = new Manager(this, messages);
         this.setupChannels();
+
         try {
             new DiscordBot(configuration.getString("botToken"), configuration, manager.getChannels());
         } catch (LoginException | InterruptedException e) {
@@ -67,6 +70,7 @@ public final class SuperUltraStaffChat extends Plugin {
         }
 
         File configFile = new File(getDataFolder(), "config.yml");
+        File messagesFile = new File(getDataFolder(), "messages.yml");
 
         // Copy default config if it doesn't exist
         if (!configFile.exists()) {
@@ -75,11 +79,18 @@ public final class SuperUltraStaffChat extends Plugin {
             in.transferTo(outputStream); // Throws IOException
         }
 
+        if(!messagesFile.exists()) {
+            FileOutputStream outputStream = new FileOutputStream(messagesFile); // Throws IOException
+            InputStream in = getResourceAsStream("messages.yml"); // This file must exist in the jar resources folder
+            in.transferTo(outputStream); // Throws IOException
+        }
+
         if (!getDataFolder().exists()) {
             getLogger().info("Created config folder: " + getDataFolder().mkdir());
         }
 
         configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(getDataFolder(), "config.yml"));
+        messages = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(getDataFolder(), "messages.yml"));
     }
 
     private void setupChannels() {

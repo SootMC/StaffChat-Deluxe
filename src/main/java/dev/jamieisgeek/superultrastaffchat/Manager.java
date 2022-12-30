@@ -6,21 +6,26 @@ import dev.jamieisgeek.superultrastaffchat.Models.DiscordBot;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.config.Configuration;
 
+import java.io.ObjectInputFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
 public class Manager {
     private static Manager manager = null;
+    private final Configuration messages;
     private final SuperUltraStaffChat plugin;
     private final ArrayList<Channel> channels = new ArrayList<>();
     private HashMap<UUID, ArrayList<Channel>> playerMutedChannels = new HashMap<>();
     private HashMap<UUID, Channel> playerToggledChannel = new HashMap<>();
+    private String formattedForJoinLeave;
 
-    public Manager(SuperUltraStaffChat plugin) {
+    public Manager(SuperUltraStaffChat plugin, Configuration messages) {
         manager = this;
         this.plugin = plugin;
+        this.messages = messages;
     }
 
     public static Manager getManager() {
@@ -59,8 +64,14 @@ public class Manager {
     }
 
     public void sendMessageToChannel(Channel channel, String message, String senderName, String serverName, boolean isDiscord) {
-        String preColor = channel.format().replace("{server}", serverName).replace("{player}", senderName).replace("{message}", message).replace("{displayName}", channel.displayName());
-        String formatted = ChatColor.translateAlternateColorCodes('&', preColor);
+        String msg = messages.getString("chat")
+                .replace("{server}", serverName)
+                .replace("{player}", senderName)
+                .replace("{message}", message)
+                .replace("{displayName}", channel.displayName())
+                .replace("{color}", channel.chatColor());
+
+        String formatted = ChatColor.translateAlternateColorCodes('&', msg);
         plugin.getProxy().getPlayers().forEach(player -> {
             if(playerMutedChannels.get(player.getUniqueId()) == null || !playerMutedChannels.get(player.getUniqueId()).contains(channel)) {
                 if(!player.hasPermission(channel.permission())) return;
@@ -73,11 +84,26 @@ public class Manager {
 
         if(isDiscord) return;
 
-        DiscordBot.getDiscordBot().sendChannelMessage(message, channel, serverName, senderName);
+        String discordMessage = messages.getString("discord")
+                .replace("{server}", serverName)
+                .replace("{player}", senderName)
+                .replace("{message}", message)
+                .replace("{displayName}", channel.displayName())
+                .replace("{color}", channel.chatColor());
+
+        DiscordBot.getDiscordBot().sendChannelMessage(discordMessage, channel);
     }
 
     public void sendMoveMessage(String player, String preServer, String postServer, Channel channel) {
-        String formatted = String.format(ChatColor.translateAlternateColorCodes('&', channel.displayName() + " &r| " + channel.chatColor() + "%s switched from %s to %s"), player, preServer, postServer);
+        String msg = messages.getString("switch")
+                .replace("{player}", player)
+                .replace("{serverFrom}", preServer)
+                .replace("{server}", postServer)
+                .replace("{displayName}", channel.displayName())
+                .replace("{color}", channel.chatColor());
+
+        String formatted = ChatColor.translateAlternateColorCodes('&', msg);
+
         plugin.getProxy().getPlayers().forEach(player1 -> {
             if(playerMutedChannels.get(player1.getUniqueId()) == null || !playerMutedChannels.get(player1.getUniqueId()).contains(channel)) {
                 if(!player1.hasPermission(channel.permission())) return;
@@ -88,29 +114,55 @@ public class Manager {
 
         plugin.getLogger().info(formatted);
 
-        DiscordBot.getDiscordBot().sendSwitchMessage(String.format("**%s** moved from **%s** to **%s**", player, preServer, postServer), channel);
+        String discordMsg = messages.getString("discordSwitch")
+                .replace("{player}", player)
+                .replace("{serverFrom}", preServer)
+                .replace("{server}", postServer)
+                .replace("{displayName}", channel.displayName())
+                .replace("{color}", channel.chatColor());
+        DiscordBot.getDiscordBot().sendChannelMessage(discordMsg, channel);
     }
 
     public void sendJoinLeaveMessage(String player, Channel channel, boolean isJoin) {
         if(isJoin) {
+
             plugin.getProxy().getPlayers().forEach(player1 -> {
                 if(playerMutedChannels.get(player1.getUniqueId()) == null || !playerMutedChannels.get(player1.getUniqueId()).contains(channel)) {
                     if (!player1.hasPermission(channel.permission())) return;
 
-                    player1.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', channel.displayName() + " &r| " + channel.chatColor() + player + " joined the network")));
+                    String msg = messages.getString("join")
+                            .replace("{player}", player)
+                            .replace("{displayName}", channel.displayName())
+                            .replace("{color}", channel.chatColor());
+                    formattedForJoinLeave = ChatColor.translateAlternateColorCodes('&', msg);
+                    player1.sendMessage(new TextComponent(formattedForJoinLeave));
                 }
             });
 
-            DiscordBot.getDiscordBot().sendJoinLeaveMessage(player, channel, true);
-            plugin.getLogger().info(ChatColor.translateAlternateColorCodes('&', channel.displayName() + "&r | " + channel.chatColor() + "[+] " + player));
+            String msg = messages.getString("discordJoin")
+                    .replace("{player}", player)
+                    .replace("{displayName}", channel.displayName())
+                    .replace("{color}", channel.chatColor());
+
+            DiscordBot.getDiscordBot().sendChannelMessage(msg, channel);
+            plugin.getLogger().info(formattedForJoinLeave);
         } else {
             plugin.getProxy().getPlayers().forEach(player1 -> {
                 if (!player1.hasPermission(channel.permission())) return;
-                player1.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', channel.displayName() + "&r | " + channel.chatColor() + "[-] " + player)));
+                String msg = messages.getString("leave")
+                        .replace("{player}", player)
+                        .replace("{displayName}", channel.displayName())
+                        .replace("{color}", channel.chatColor());
+                formattedForJoinLeave = ChatColor.translateAlternateColorCodes('&', msg);
+                player1.sendMessage(new TextComponent(formattedForJoinLeave));
             });
 
-            DiscordBot.getDiscordBot().sendJoinLeaveMessage(player, channel, false);
-            plugin.getLogger().info(ChatColor.translateAlternateColorCodes('&', channel.displayName() + "&r | " + channel.chatColor() + "[-] " + player));
+            String msg = messages.getString("discordLeave")
+                    .replace("{player}", player)
+                    .replace("{displayName}", channel.displayName())
+                    .replace("{color}", channel.chatColor());
+            DiscordBot.getDiscordBot().sendChannelMessage(msg, channel);
+            plugin.getLogger().info(formattedForJoinLeave);
         }
     }
 
