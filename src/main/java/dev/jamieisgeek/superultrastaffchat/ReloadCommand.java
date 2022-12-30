@@ -26,6 +26,8 @@ public class ReloadCommand extends Command {
             } catch (IOException | SQLException e) {
                 throw new RuntimeException(e);
             }
+
+            sender.sendMessage(new TextComponent(ChatColor.GREEN + "Reloaded config"));
         } else {
             sender.sendMessage(new TextComponent(ChatColor.RED + "Usage: /susc reload"));
         }
