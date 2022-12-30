@@ -12,6 +12,7 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
 import javax.security.auth.login.LoginException;
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -49,7 +50,9 @@ public final class SuperUltraStaffChat extends Plugin {
         getProxy().getPluginManager().registerListener(this, new ChatEvent());
         getProxy().getPluginManager().registerListener(this, new JoinEvent());
         getProxy().getPluginManager().registerListener(this, new ServerSwitchEvent());
+
         getProxy().getPluginManager().registerCommand(this, new StaffListCommand());
+        getProxy().getPluginManager().registerCommand(this, new ReloadCommand());
         getLogger().info("SuperUltraStaffChat has enabled");
     }
 
@@ -113,6 +116,27 @@ public final class SuperUltraStaffChat extends Plugin {
 
         for(Channel channel : manager.getChannels()) {
             getProxy().getPluginManager().registerCommand(this, new ChatCommand(channel.command(), channel, manager));
+        }
+    }
+
+    public void reload() throws SQLException {
+        try {
+            this.setupConfig();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        manager = new Manager(this, messages);
+
+        Manager.getManager().getChannels().clear();
+        this.setupChannels();
+
+        Database.getDatabase().closeConnection();
+
+        try {
+            this.setupDatabaseConnection();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 

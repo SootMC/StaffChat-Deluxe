@@ -7,15 +7,19 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.config.ConfigurationProvider;
+import net.md_5.bungee.config.YamlConfiguration;
 
-import java.io.ObjectInputFilter;
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
 public class Manager {
     private static Manager manager = null;
-    private final Configuration messages;
+    private Configuration messages;
     private final SuperUltraStaffChat plugin;
     private final ArrayList<Channel> channels = new ArrayList<>();
     private HashMap<UUID, ArrayList<Channel>> playerMutedChannels = new HashMap<>();
@@ -202,6 +206,11 @@ public class Manager {
                 sender.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', staffMember)));
             }
         }
+    }
+
+    public void reload() throws IOException, SQLException {
+        messages = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(plugin.getDataFolder(), "messages.yml"));
+        plugin.reload();
     }
 
     public void addPlayerToggledChannel(UUID uuid, Channel channel) {
