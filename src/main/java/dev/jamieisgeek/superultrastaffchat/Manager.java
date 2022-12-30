@@ -10,6 +10,7 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
+import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -208,7 +209,7 @@ public class Manager {
         }
     }
 
-    public void reload() throws IOException, SQLException {
+    public void reload() throws IOException, SQLException, LoginException, InterruptedException {
         messages = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(plugin.getDataFolder(), "messages.yml"));
         plugin.reload();
     }
