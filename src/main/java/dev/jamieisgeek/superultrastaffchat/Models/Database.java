@@ -1,22 +1,39 @@
-package dev.jamieisgeek.superultrastaffchat.Models;
-
 import java.sql.*;
 
 public class Database {
     private Connection connection;
+    private String address;
+    private String databaseName;
+    private String username;
+    private String password;
+    private String port;
+
     private static Database database = null;
 
     public Database(String address, String database, String username, String password, String port) throws SQLException {
-        this.connection = DriverManager.getConnection(
-                "jdbc:mariadb://" + address + ":" + port + "/" + database + "?autoReconnect=true&useSSL=false",
-                username,
-                password
-        );
+        this.address = address;
+        this.databaseName = database;
+        this.username = username;
+        this.password = password;
+        this.port = port;
+
+        this.connection = createConnection();
 
         Database.database = this;
     }
 
-    public Connection getConnection() {
+    private Connection createConnection() throws SQLException {
+        return DriverManager.getConnection(
+                "jdbc:mariadb://" + address + ":" + port + "/" + databaseName + "?autoReconnect=true&useSSL=false",
+                username,
+                password
+        );
+    }
+
+    public Connection getConnection() throws SQLException {
+        if (connection == null || connection.isClosed()) {
+            connection = createConnection();
+        }
         return connection;
     }
 
@@ -34,7 +51,7 @@ public class Database {
 
     public boolean getPlayerVanished(String UUID) {
         try {
-            PreparedStatement stmt = this.connection.prepareStatement("SELECT Name, Vanished FROM premiumvanish_playerdata WHERE UUID = ?");
+            PreparedStatement stmt = getConnection().prepareStatement("SELECT Name, Vanished FROM premiumvanish_playerdata WHERE UUID = ?");
             stmt.setString(1, UUID);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
