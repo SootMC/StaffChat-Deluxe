@@ -1,3 +1,5 @@
+package dev.jamieisgeek.superultrastaffchat.Models;
+
 import java.sql.*;
 
 public class Database {
