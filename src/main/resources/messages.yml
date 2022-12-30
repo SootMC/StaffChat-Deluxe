@@ -1,0 +1,18 @@
+# Placeholders:
+# {server} - Current server name
+# {serverFrom} - Server switched from
+# {player} - Player name
+# {message} - Message sent
+# {displayName} - Channel display name (defined by the displayName config option)
+# {color} - The channel chatColor (defined by the chatColor config option)
+
+join: '{displayName} &f| {color}{player} joined the network'
+leave: '{displayName} &f| {color}{player} left the network'
+switch: '{displayName} &f| {color}{player} switched from {serverFrom} to {server}'
+
+chat: '{color}[{displayName}{color}] &f| {color}{server} &f| {color}{player} &7» {color}{message}'
+discord: '**{server}** | {player}: {message}'
+
+discordJoin: '**{player}** joined the network'
+discordLeave: '**{player}** left the network'
+discordSwitch: '**{player}** switched from **{serverFrom}** to **{server}**'
