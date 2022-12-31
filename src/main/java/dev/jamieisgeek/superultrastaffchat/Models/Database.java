@@ -1,9 +1,15 @@
 package dev.jamieisgeek.superultrastaffchat.Models;
 
-import java.sql.*;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Database {
-    private Connection connection;
+    private HikariDataSource dataSource;
+
     private String address;
     private String databaseName;
     private String username;
@@ -12,31 +18,32 @@ public class Database {
 
     private static Database database = null;
 
-    public Database(String address, String database, String username, String password, String port) throws SQLException {
+    public Database(String address, String database, String username, String password, String port) {
         this.address = address;
         this.databaseName = database;
         this.username = username;
         this.password = password;
         this.port = port;
 
-        this.connection = createConnection();
+        this.dataSource = createDataSource();
 
         Database.database = this;
     }
 
-    private Connection createConnection() throws SQLException {
-        return DriverManager.getConnection(
-                "jdbc:mariadb://" + address + ":" + port + "/" + databaseName + "?autoReconnect=true&useSSL=false",
-                username,
-                password
-        );
+    private HikariDataSource createDataSource() {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(String.format("jdbc:mariadb://%s:%s/%s?autoReconnect=true&useSSL=false", address, port, databaseName));
+        config.setUsername(username);
+        config.setPassword(password);
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+
+        return new HikariDataSource(config);
     }
 
     public Connection getConnection() throws SQLException {
-        if (connection == null || connection.isClosed()) {
-            connection = createConnection();
-        }
-        return connection;
+        return dataSource.getConnection();
     }
 
     public static Database getDatabase() {
@@ -44,16 +51,12 @@ public class Database {
     }
 
     public void closeConnection() throws SQLException {
-        if (this.connection != null) {
-            this.connection.close();
-        } else {
-            throw new SQLException("Connection is null, aborting close!");
-        }
+        dataSource.close();
     }
 
     public boolean getPlayerVanished(String UUID) {
-        try {
-            PreparedStatement stmt = getConnection().prepareStatement("SELECT Name, Vanished FROM premiumvanish_playerdata WHERE UUID = ?");
+        try (Connection connection = getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement("SELECT Name, Vanished FROM premiumvanish_playerdata WHERE UUID = ?");
             stmt.setString(1, UUID);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
