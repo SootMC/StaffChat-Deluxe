@@ -2,4 +2,4 @@ name: SuperUltraStaffChat
 version: '${project.version}'
 main: dev.jamieisgeek.superultrastaffchat.SuperUltraStaffChat
 description: A simple staff chat plugin for BungeeCord
-author: JamieIsGeek
+author: JamieIsGeek, bumpjammy
