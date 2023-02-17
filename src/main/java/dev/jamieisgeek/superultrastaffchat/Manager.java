@@ -47,8 +47,9 @@ public class Manager {
 
     public void addPlayerMutedChannel(UUID uuid, Channel channel) {
         if(playerMutedChannels.containsKey(uuid)) {
-            if(!playerMutedChannels.get(uuid).contains(channel)) {
-                playerMutedChannels.get(uuid).add(channel);
+            ArrayList<Channel> mutedChannels = playerMutedChannels.get(uuid);
+            if(!mutedChannels.contains(channel) && !mutedChannels.contains(null)) {
+                mutedChannels.add(channel);
             }
         } else {
             ArrayList<Channel> channels = new ArrayList<>();
@@ -62,7 +63,7 @@ public class Manager {
         if (channels != null) {
             for (int i = 0; i < channels.size(); i++) {
                 if (channels.get(i).name().equals(channel.name())) {
-                    channels.set(i, null);
+                    channels.remove(i);
                 }
             }
         }
