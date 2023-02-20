@@ -22,4 +22,3 @@ channels:
     commandAliases: ["staffchat", "staffc"]
     moveMessages: true
     discordChannel: "328923486723845"
-    format: "&c[{displayName}&c] &f| &c{server} &f| &c{player} &7» &c{message}"

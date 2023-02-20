@@ -30,6 +30,10 @@ public class ChatEvent implements Listener {
 
         manager.getChannels().forEach(channel -> {
             if (message.startsWith(channel.chatPrefix())) {
+                if(manager.getPlayerToggledChannel().get(player.getUniqueId()) != null && manager.getPlayerToggledChannel().get(player.getUniqueId()) == channel) {
+                    return;
+                }
+
                 if(player.hasPermission(channel.permission())) {
                     String msg = message.replace(channel.chatPrefix(), "");
                     manager.sendMessageToChannel(channel, msg, senderName, serverName, isDiscord);
