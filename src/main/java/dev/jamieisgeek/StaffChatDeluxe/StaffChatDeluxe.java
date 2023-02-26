@@ -31,7 +31,7 @@ public final class StaffChatDeluxe extends Plugin {
             throw new RuntimeException(e);
         }
 
-        manager = new Manager(this, messages);
+        manager = new Manager(this, messages, configuration);
         this.setupChannels();
 
         if(configuration.getBoolean("discordEnabled"))
@@ -129,7 +129,7 @@ public final class StaffChatDeluxe extends Plugin {
             throw new RuntimeException(e);
         }
 
-        manager = new Manager(this, messages);
+        manager = new Manager(this, messages, configuration);
 
         Manager.getManager().getChannels().clear();
         this.setupChannels();
