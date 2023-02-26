@@ -1,25 +1,24 @@
-package dev.jamieisgeek.superultrastaffchat;
+package dev.jamieisgeek.StaffChatDeluxe;
 
-import dev.jamieisgeek.superultrastaffchat.Events.ChatEvent;
-import dev.jamieisgeek.superultrastaffchat.Events.JoinEvent;
-import dev.jamieisgeek.superultrastaffchat.Events.ServerSwitchEvent;
-import dev.jamieisgeek.superultrastaffchat.Models.Channel;
-import dev.jamieisgeek.superultrastaffchat.Models.Database;
-import dev.jamieisgeek.superultrastaffchat.Models.DiscordBot;
+import dev.jamieisgeek.StaffChatDeluxe.Events.ChatEvent;
+import dev.jamieisgeek.StaffChatDeluxe.Events.JoinEvent;
+import dev.jamieisgeek.StaffChatDeluxe.Events.ServerSwitchEvent;
+import dev.jamieisgeek.StaffChatDeluxe.Models.Channel;
+import dev.jamieisgeek.StaffChatDeluxe.Models.Database;
+import dev.jamieisgeek.StaffChatDeluxe.Models.DiscordBot;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
 import javax.security.auth.login.LoginException;
-import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 
-public final class SuperUltraStaffChat extends Plugin {
+public final class StaffChatDeluxe extends Plugin {
     private Configuration configuration;
     private Configuration messages;
     private Manager manager;
@@ -35,17 +34,19 @@ public final class SuperUltraStaffChat extends Plugin {
         manager = new Manager(this, messages);
         this.setupChannels();
 
-        try {
-            new DiscordBot(configuration.getString("botToken"), configuration, manager.getChannels());
-        } catch (LoginException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        if(configuration.getBoolean("discordEnabled"))
+            try {
+                new DiscordBot(configuration.getString("botToken"), manager.getChannels());
+            } catch (LoginException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
 
-        try {
-            this.setupDatabaseConnection();
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        if(configuration.getBoolean("vanishChecking"))
+            try {
+                this.setupDatabaseConnection();
+            } catch (SQLException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
 
         getProxy().getPluginManager().registerListener(this, new ChatEvent());
         getProxy().getPluginManager().registerListener(this, new JoinEvent());
@@ -53,18 +54,20 @@ public final class SuperUltraStaffChat extends Plugin {
 
         getProxy().getPluginManager().registerCommand(this, new StaffListCommand());
         getProxy().getPluginManager().registerCommand(this, new ReloadCommand());
-        getLogger().info("SuperUltraStaffChat has enabled");
+        getLogger().info("StaffChat Deluxe has enabled");
     }
 
     @Override
     public void onDisable() {
-        DiscordBot.getBOT().shutdownNow();
-        getLogger().info("Discord bot shutdown");
-        try {
-            Database.getDatabase().closeConnection();
-        } catch (SQLException ignored) {
-        }
-        getLogger().info("SuperUltraStaffChat has disabled");
+        if(configuration.getBoolean("discordEnabled"))
+            DiscordBot.getBOT().shutdown();
+
+        if(configuration.getBoolean("vanishChecking"))
+            try {
+                Database.getDatabase().closeConnection();
+            } catch (SQLException ignored) {
+            }
+        getLogger().info("StaffChat Deluxe has disabled");
     }
 
     private void setupConfig() throws IOException {
@@ -132,14 +135,18 @@ public final class SuperUltraStaffChat extends Plugin {
         this.setupChannels();
 
         DiscordBot.getBOT().shutdownNow();
-        new DiscordBot(configuration.getString("botToken"), configuration, manager.getChannels());
+
+        if(configuration.getBoolean("discordEnabled"))
+            new DiscordBot(configuration.getString("botToken"), manager.getChannels());
+
         Database.getDatabase().closeConnection();
 
-        try {
-            this.setupDatabaseConnection();
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        if(configuration.getBoolean("vanishChecking"))
+            try {
+                this.setupDatabaseConnection();
+            } catch (SQLException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
     }
 
     private void setupDatabaseConnection() throws SQLException, ClassNotFoundException {

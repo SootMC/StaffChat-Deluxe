@@ -1,6 +1,6 @@
-package dev.jamieisgeek.superultrastaffchat.Events;
+package dev.jamieisgeek.StaffChatDeluxe.Events;
 
-import dev.jamieisgeek.superultrastaffchat.Manager;
+import dev.jamieisgeek.StaffChatDeluxe.Manager;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 

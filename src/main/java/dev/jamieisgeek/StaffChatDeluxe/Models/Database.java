@@ -1,4 +1,4 @@
-package dev.jamieisgeek.superultrastaffchat.Models;
+package dev.jamieisgeek.StaffChatDeluxe.Models;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -8,13 +8,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Database {
-    private HikariDataSource dataSource;
+    private final HikariDataSource dataSource;
 
-    private String address;
-    private String databaseName;
-    private String username;
-    private String password;
-    private String port;
+    private final String address;
+    private final String databaseName;
+    private final String username;
+    private final String password;
+    private final String port;
 
     private static Database database = null;
 

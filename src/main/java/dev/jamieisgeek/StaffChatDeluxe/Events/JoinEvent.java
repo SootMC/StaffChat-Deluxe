@@ -1,15 +1,11 @@
-package dev.jamieisgeek.superultrastaffchat.Events;
+package dev.jamieisgeek.StaffChatDeluxe.Events;
 
-import dev.jamieisgeek.superultrastaffchat.Manager;
-import dev.jamieisgeek.superultrastaffchat.Models.Channel;
+import dev.jamieisgeek.StaffChatDeluxe.Manager;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-
-import java.net.ConnectException;
 
 public class JoinEvent implements Listener {
     Manager manager = Manager.getManager();

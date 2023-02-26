@@ -1,8 +1,8 @@
-package dev.jamieisgeek.superultrastaffchat;
+package dev.jamieisgeek.StaffChatDeluxe;
 
-import dev.jamieisgeek.superultrastaffchat.Models.Channel;
-import dev.jamieisgeek.superultrastaffchat.Models.Database;
-import dev.jamieisgeek.superultrastaffchat.Models.DiscordBot;
+import dev.jamieisgeek.StaffChatDeluxe.Models.Channel;
+import dev.jamieisgeek.StaffChatDeluxe.Models.Database;
+import dev.jamieisgeek.StaffChatDeluxe.Models.DiscordBot;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -21,16 +21,18 @@ import java.util.UUID;
 public class Manager {
     private static Manager manager = null;
     private Configuration messages;
-    private final SuperUltraStaffChat plugin;
+    private final Configuration config;
+    private final StaffChatDeluxe plugin;
     private final ArrayList<Channel> channels = new ArrayList<>();
     private HashMap<UUID, ArrayList<Channel>> playerMutedChannels = new HashMap<>();
     private HashMap<UUID, Channel> playerToggledChannel = new HashMap<>();
     private String formattedForJoinLeave;
 
-    public Manager(SuperUltraStaffChat plugin, Configuration messages) {
+    public Manager(StaffChatDeluxe plugin, Configuration messages, Configuration config) {
         manager = this;
         this.plugin = plugin;
         this.messages = messages;
+        this.config = config;
     }
 
     public static Manager getManager() {
@@ -90,6 +92,7 @@ public class Manager {
 
         if(isDiscord) return;
 
+        if(!config.getBoolean("discordEnabled")) return;
         String discordMessage = messages.getString("discord")
                 .replace("{server}", serverName)
                 .replace("{player}", senderName)
@@ -120,6 +123,8 @@ public class Manager {
 
         plugin.getLogger().info(formatted);
 
+        if(!config.getBoolean("discordEnabled")) return;
+
         String discordMsg = messages.getString("discordSwitch")
                 .replace("{player}", player)
                 .replace("{serverFrom}", preServer)
@@ -145,12 +150,15 @@ public class Manager {
                 }
             });
 
-            String msg = messages.getString("discordJoin")
-                    .replace("{player}", player)
-                    .replace("{displayName}", channel.displayName())
-                    .replace("{color}", channel.chatColor());
+            if(config.getBoolean("discordEnabled")) {
+                String msg = messages.getString("discordJoin")
+                        .replace("{player}", player)
+                        .replace("{displayName}", channel.displayName())
+                        .replace("{color}", channel.chatColor());
 
-            DiscordBot.getDiscordBot().sendChannelMessage(msg, channel);
+                DiscordBot.getDiscordBot().sendChannelMessage(msg, channel);
+            }
+
             plugin.getLogger().info(formattedForJoinLeave);
         } else {
             plugin.getProxy().getPlayers().forEach(player1 -> {
@@ -163,11 +171,13 @@ public class Manager {
                 player1.sendMessage(new TextComponent(formattedForJoinLeave));
             });
 
-            String msg = messages.getString("discordLeave")
-                    .replace("{player}", player)
-                    .replace("{displayName}", channel.displayName())
-                    .replace("{color}", channel.chatColor());
-            DiscordBot.getDiscordBot().sendChannelMessage(msg, channel);
+            if(config.getBoolean("discordEnabled")) {
+                String msg = messages.getString("discordLeave")
+                        .replace("{player}", player)
+                        .replace("{displayName}", channel.displayName())
+                        .replace("{color}", channel.chatColor());
+                DiscordBot.getDiscordBot().sendChannelMessage(msg, channel);
+            }
             plugin.getLogger().info(formattedForJoinLeave);
         }
     }
@@ -176,7 +186,12 @@ public class Manager {
         ArrayList<String> staff = new ArrayList<>();
         if(vanishedPlayers) {
             plugin.getProxy().getPlayers().forEach(player -> {
-                if(!player.hasPermission("superultrastaffchat.staff")) {
+                if(!player.hasPermission("staffchatdeluxe.staff")) {
+                    return;
+                }
+
+                if(!config.getBoolean("vanishChecking")) {
+                    staff.add(ChatColor.AQUA + "[" + player.getServer().getInfo().getName() + "] " + player.getName());
                     return;
                 }
 
@@ -188,12 +203,14 @@ public class Manager {
             });
         } else {
             plugin.getProxy().getPlayers().forEach(player -> {
-                if(!player.hasPermission("superultrastaffchat.staff")) {
+                if(!player.hasPermission("staffchatdeluxe.staff")) {
                     return;
                 }
 
-                if(Database.getDatabase().getPlayerVanished(player.getUniqueId().toString())) {
-                    return;
+                if (config.getBoolean("vanishChecking")) {
+                    if(Database.getDatabase().getPlayerVanished(player.getUniqueId().toString())) {
+                        return;
+                    }
                 }
 
                 staff.add(ChatColor.AQUA + "[" + player.getServer().getInfo().getName() + "] " + player.getName());
@@ -226,7 +243,7 @@ public class Manager {
     public HashMap<UUID, Channel> getPlayerToggledChannel() {
         return playerToggledChannel;
     }
-    public SuperUltraStaffChat getPlugin() {
+    public StaffChatDeluxe getPlugin() {
         return plugin;
     }
 }

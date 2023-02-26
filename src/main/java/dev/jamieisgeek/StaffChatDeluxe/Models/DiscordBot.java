@@ -1,6 +1,6 @@
-package dev.jamieisgeek.superultrastaffchat.Models;
+package dev.jamieisgeek.StaffChatDeluxe.Models;
 
-import dev.jamieisgeek.superultrastaffchat.Manager;
+import dev.jamieisgeek.StaffChatDeluxe.Manager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.events.GenericEvent;
@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
-import net.md_5.bungee.config.Configuration;
 import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
@@ -20,14 +19,12 @@ import java.util.Map;
 import java.util.Objects;
 
 public class DiscordBot implements EventListener {
-    private final String token;
-    private HashMap<Channel, String> discordChannels = new HashMap<>();
+    private final HashMap<Channel, String> discordChannels = new HashMap<>();
     private static JDA BOT;
     private static DiscordBot discordBot;
     private final Manager manager;
 
-    public DiscordBot(String token, Configuration config, ArrayList<Channel> channels) throws LoginException, InterruptedException {
-        this.token = token;
+    public DiscordBot(String token, ArrayList<Channel> channels) throws LoginException, InterruptedException {
         this.manager = Manager.getManager();
         discordBot = this;
         for(Channel channel : channels) {

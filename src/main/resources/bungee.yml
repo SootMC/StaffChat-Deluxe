@@ -1,5 +1,5 @@
-name: SuperUltraStaffChat
+name: StaffChatDeluxe
 version: '${project.version}'
-main: dev.jamieisgeek.superultrastaffchat.SuperUltraStaffChat
+main: dev.jamieisgeek.staffchatdeluxe.StaffChatDeluxe
 description: A simple staff chat plugin for BungeeCord
-author: JamieIsGeek, bumpjammy
+author: JamieIsGeek

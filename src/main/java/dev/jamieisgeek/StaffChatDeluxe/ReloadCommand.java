@@ -1,4 +1,4 @@
-package dev.jamieisgeek.superultrastaffchat;
+package dev.jamieisgeek.StaffChatDeluxe;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 public class ReloadCommand extends Command {
     public ReloadCommand() {
-        super("susc", "superultrastaffchat.reload", "sus");
+        super("scdr", "staffchatdeluxe.reload", "scdr");
     }
 
     @Override

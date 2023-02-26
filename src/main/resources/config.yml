@@ -1,17 +1,23 @@
-# Placeholders:
+# STAFFCHAT DELUXE CONFIGURATION FILE
+#
+#
+# Placeholders for us in config:
 # {server} - Current server name
 # {player} - Player name
 # {message} - Message sent
 # {displayName} - Channel display name (defined by the displayName config option)
 
 botToken: "token"
+discordEnabled: true
+vanishChecking: false
 
-# Premium Vanish Database Hook
+# Premium Vanish Database Hook - Only use if you have vanishChecking enabled
 sql:
   database: "database"
   host: "127.0.0.0"
   username: "root"
   password: "password"
+
 channels:
   staff:
     displayName: "&4&lStaff"
