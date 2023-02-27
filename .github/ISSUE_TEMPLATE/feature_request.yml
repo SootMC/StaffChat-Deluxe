@@ -1,0 +1,14 @@
+name: Feature request
+description: Suggest an idea for this project
+labels: "Feature Request"
+body:
+- type: markdown
+  attributes:
+    value: |
+      Please make sure that the thing you are requesting is an actual feature request and that it isn't something that hass been PR'd or added already.
+- type: textarea
+  attributes:
+    label: What feature do you want to see added?
+    description: A clear and concise description of your feature request.
+  validations:
+    required: true
