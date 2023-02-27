@@ -1,5 +1,5 @@
 # StaffChat Deluxe
-[![Maven Build](https://github.com/SootMC/StaffChat-Deluxe/actions/workflows/maven.yml/badge.svg)](https://github.com/SootMC/StaffChat-Deluxe/actions/workflows/maven.yml)
+[![Maven Build](https://github.com/SootMC/StaffChat-Deluxe/actions/workflows/maven.yml/badge.svg)](https://github.com/SootMC/StaffChat-Deluxe/actions/workflows/maven.yml)  [![forthebadge made-with-java](https://forthebadge.com/images/badges/made-with-java.svg)](https://java.com/)  [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 This plugin is a remake of the plugin UltraStaffChatPro, made for SootMC, this README basically just says how to make your channels and stuff.
 
