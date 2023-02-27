@@ -8,6 +8,12 @@ body:
       Only use this if you're absolutely sure that you found a bug and can reproduce it.
 - type: textarea
   attributes:
+    label: What version of the plugin are you using?
+    description: Whatever version is in the name of your jar file. E.G StaffChat-Deluxe-1.2.1.jar
+  validations:
+    required: true
+- type: textarea
+  attributes:
     label: Describe the bug
     description: A clear and concise description of what the bug is.
   validations:
