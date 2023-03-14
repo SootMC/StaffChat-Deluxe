@@ -1,5 +1,5 @@
 name: StaffChatDeluxe
 version: '${project.version}'
-main: dev.jamieisgeek.staffchatdeluxe.StaffChatDeluxe
+main: dev.jamieisgeek.StaffChatDeluxe.StaffChatDeluxe
 description: A simple staff chat plugin for BungeeCord
 author: JamieIsGeek
