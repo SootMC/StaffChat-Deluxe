@@ -5,7 +5,7 @@ This plugin is a remake of the plugin UltraStaffChatPro, made for SootMC, this R
 
 
 ## The Config
-The config file is the main part of the plugin, its where you define all the things for your channels.
+The config file is the main part of the plugin, its where you define all the things for your channels. 
 
 ```yaml
 discordEnabled:
